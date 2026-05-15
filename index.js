@@ -149,11 +149,16 @@ function formatTime(ms) {
 
 function formatHour(timestamp) {
 
-    return new Date(timestamp).toLocaleTimeString('es-UY', {
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit'
-    });
+    return new Date(timestamp).toLocaleTimeString(
+        'es-UY',
+        {
+            timeZone:
+                'America/Montevideo',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        }
+    );
 }
 
 function formatDate() {
