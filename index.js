@@ -722,7 +722,13 @@ if (i.isModalSubmit() && i.customId === 'modal_warn') {
                     'warn',
                     reason,
                     i.user.id,
-                    new Date().toLocaleString('es-UY')
+                    new Date().toLocaleString(
+    'es-UY',
+    {
+        timeZone:
+            'America/Montevideo'
+    }
+)
                 ],
                 async () => {
 db.run(
@@ -733,7 +739,13 @@ db.run(
         target,
         `Strike: ${reason}`,
         i.user.id,
-        new Date().toLocaleString('es-UY')
+        new Date().toLocaleString(
+    'es-UY',
+    {
+        timeZone:
+            'America/Montevideo'
+    }
+)
     ]
 );
 
@@ -746,7 +758,13 @@ db.run(
         target,
         `Warn: ${reason}`,
         i.user.id,
-        new Date().toLocaleString('es-UY')
+        new Date().toLocaleString(
+    'es-UY',
+    {
+        timeZone:
+            'America/Montevideo'
+    }
+)
     ]
 );
                     db.all(
@@ -819,7 +837,13 @@ ${newWarnCount}/3`
                                         'strike',
                                         'AutoStrike por 3 advertencias',
                                         i.user.id,
-                                        new Date().toLocaleString('es-UY')
+                                        new Date().toLocaleString(
+    'es-UY',
+    {
+        timeZone:
+            'America/Montevideo'
+    }
+)
                                     ]
                                 );
 
@@ -924,7 +948,13 @@ await i.deferReply({ flags: 64 });
             'strike',
             reason,
             i.user.id,
-            new Date().toLocaleString('es-UY')
+            new Date().toLocaleString(
+    'es-UY',
+    {
+        timeZone:
+            'America/Montevideo'
+    }
+)
         ],
         () => {
 
@@ -1043,7 +1073,13 @@ db.run(
         userId,
         'Aprobado',
         i.user.id,
-        new Date().toLocaleString('es-UY')
+        new Date().toLocaleString(
+    'es-UY',
+    {
+        timeZone:
+            'America/Montevideo'
+    }
+)
     ],
     (err) => {
 
@@ -1658,7 +1694,13 @@ db.run(
         userId,
         'Despedido',
         i.user.id,
-        new Date().toLocaleString('es-UY')
+        new Date().toLocaleString(
+    'es-UY',
+    {
+        timeZone:
+            'America/Montevideo'
+    }
+)
     ]
 );
         await channel.send(
@@ -1889,7 +1931,13 @@ db.get(
             [
                 userId,
                 rewardName,
-                new Date().toLocaleString('es-UY')
+                new Date().toLocaleString(
+    'es-UY',
+    {
+        timeZone:
+            'America/Montevideo'
+    }
+)
             ],
             async () => {
 
