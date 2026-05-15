@@ -910,6 +910,8 @@ if (i.isButton() && i.customId === 'add_strike') {
 
 if (i.isModalSubmit() && i.customId === 'modal_strike') {
 
+await i.deferReply({ flags: 64 });
+
     const target = i.fields.getTextInputValue('strike_user');
 
     const reason = i.fields.getTextInputValue('strike_reason');
