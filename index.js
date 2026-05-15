@@ -859,7 +859,7 @@ ${newWarnCount}/3`
                                 }
                             }
 
-                            return i.editReply({
+                            return i.reply({
                                 content:
                                     `✅ Advertencia agregada (${newWarnCount}/3)`,
                                 flags: 64
