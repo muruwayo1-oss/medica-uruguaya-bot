@@ -398,26 +398,25 @@ SANCIONES
 🚨 Strike
 📋 Historial
 
-🔐 Rango requerido:
+🔐Rango requerido:
 GESTION DE PERSONAL
-
+DIRECTOR
 ━━━━━━━━━━━━━━━━━━
 ADMINISTRACION
 🎁 Rewards (crear-elegibles)
 🗑️ Remove Warn
 🗑️ Remove Strike
-✅ Aprobar postulantes
 
-🔐 Rango requerido:
+🔐Rango requerido:
 DIRECTOR
 
 ━━━━━━━━━━━━━━━━━━
 GESTION DE POSTULACIONES
 ✅ Aprobar postulantes
 
-🔐 Rango requerido:
+🔐Rango mínimo requerido:
 INSTRUCTOR
-
+DIRECTOR
 ━━━━━━━━━━━━━━━━━━`
 )
 
