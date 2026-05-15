@@ -1353,7 +1353,7 @@ if (i.isStringSelectMenu()) {
         ) {
 
             return i.reply({
-                content: '❌ Debes estar en el voice configurado',
+                content: '❌ Debes estar en el voice "en servicio"',
                 flags: 64
             });
         }
