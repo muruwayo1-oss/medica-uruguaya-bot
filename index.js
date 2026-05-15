@@ -237,35 +237,46 @@ db.run(
 
             const channel = await client.channels.fetch(LOG_CHANNEL_ID);
 
-            const embed = new EmbedBuilder()
-                .setColor(0x00bfff)
-                .setTitle('📊 Sesión Finalizada')
-                .addFields(
-                    {
-                        name: '👤 Usuario',
-                        value: `<@${userId}>`,
-                        inline: true
-                    },
-                    {
-                        name: '🟢 Entrada',
-                        value: formatHour(data.start),
-                        inline: true
-                    },
-                    {
-                        name: '🔴 Salida',
-                        value: formatHour(end),
-                        inline: true
-                    },
-                    {
-                        name: '⏱️ Duración',
-                        value: formatTime(diff)
-                    },
-                    {
-                        name: '📊 Total Semanal',
-                        value: formatTime(total)
-                    }
-                )
-                .setTimestamp();
+const embed = new EmbedBuilder()
+    .setColor(0x00bfff)
+    .setTitle('📊 Sesión Finalizada')
+    .addFields(
+        {
+            name: '👤 Usuario',
+            value: `<@${userId}>`,
+            inline: true
+        },
+        {
+            name: '🟢 Entrada',
+            value: formatHour(data.start),
+            inline: true
+        },
+        {
+            name: '🔴 Salida',
+            value: formatHour(end),
+            inline: true
+        },
+        {
+            name: '⏱️ Duración',
+            value: formatTime(diff)
+        },
+        {
+            name: '📊 Total Semanal',
+            value: formatTime(total)
+        }
+    )
+    .setFooter({
+        text:
+`Hora Uruguay: ${
+new Date().toLocaleString(
+'es-UY',
+{
+timeZone:
+'America/Montevideo'
+}
+)
+}`
+    });
 
             channel.send({
                 embeds: [embed]
