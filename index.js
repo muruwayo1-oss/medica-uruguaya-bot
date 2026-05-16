@@ -2168,7 +2168,7 @@ ${rewardData.reward}
 }
     if (!i.member.roles.cache.has(ADMIN_ROLE_ID)) {
 
-        return i.editReply({
+        return i.reply({
             content: '❌ No tienes permisos',
             flags: 64
         });
