@@ -2561,6 +2561,8 @@ client.on('interactionCreate', async i => {
     }
 });
 
+}
+
 client.on('interactionCreate', async i => {
 
     if (!i.isChatInputCommand()) return;
