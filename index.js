@@ -592,7 +592,6 @@ client.on('interactionCreate', async i => {
 
     const userId = i.user.id;
 // ================= VER ELEGIBLES =================
-
 if (i.isButton() && i.customId === 'ver_elegibles') {
 
     await i.deferReply({ flags: 64 });
@@ -600,6 +599,7 @@ if (i.isButton() && i.customId === 'ver_elegibles') {
     db.all(
         `SELECT * FROM rewards WHERE active=1`,
         [],
+
         async (err, rewards) => {
 
             if (!rewards.length) {
@@ -612,73 +612,100 @@ if (i.isButton() && i.customId === 'ver_elegibles') {
 
             const options = [];
 
+            const guild =
+                await client.guilds.fetch(
+                    GUILD_ID
+                );
+
             for (const reward of rewards) {
 
                 const sessions =
-                    await new Promise((resolve, reject) => {
+                    await new Promise(
+                        (resolve, reject) => {
 
-                        db.all(
-                            `SELECT * FROM sessions
-                            WHERE created_at >= ?`,
-                            [reward.created_at],
-                            (err, rows) => {
+                            db.all(
+                                `SELECT * FROM sessions
+                                WHERE created_at >= ?`,
+                                [reward.created_at],
 
-                                if (err) reject(err);
+                                (err, rows) => {
 
-                                else resolve(rows);
-                            }
-                        );
-                    });
+                                    if (err)
+                                        reject(err);
+
+                                    else
+                                        resolve(rows);
+                                }
+                            );
+                        }
+                    );
 
                 const totals = {};
 
                 sessions.forEach(session => {
 
-                    if (!totals[session.user_id]) {
-
-                        totals[session.user_id] = 0;
-                    }
-
-                    totals[session.user_id] +=
-                        session.duration;
-                });
-
-                Object.keys(totals).forEach(userId => {
-
-                    const hours = Math.floor(
-                        totals[userId] / 3600
-                    );
-
                     if (
-                        hours >= reward.required_hours
+                        !totals[
+                            session.user_id
+                        ]
                     ) {
 
-                        options.push({
-                            label:
-                                `${reward.name} - ${hours}h`,
-                            const guild =
-    await client.guilds.fetch(
-        GUILD_ID
-    );
-
-const member =
-    await guild.members.fetch(
-        user.user_id
-    );
-
-options.push({
-    label:
-        `${reward.name} - ${hours}h`,
-    description:
-        `${member.displayName}`,
-    value:
-        `${user.user_id}|${reward.name}`
-});
-                            value:
-                                `${userId}|${reward.name}`
-                        });
+                        totals[
+                            session.user_id
+                        ] = 0;
                     }
+
+                    totals[
+                        session.user_id
+                    ] += session.duration;
                 });
+
+                for (const userId of Object.keys(totals)) {
+
+                    const hours =
+                        Math.floor(
+                            totals[userId]
+                            / 3600
+                        );
+
+                    if (
+                        hours >=
+                        reward.required_hours
+                    ) {
+
+                        try {
+
+                            const member =
+                                await guild.members.fetch(
+                                    userId
+                                );
+
+                            options.push({
+                                label:
+                                    `${reward.name} - ${hours}h`,
+
+                                description:
+                                    member.displayName,
+
+                                value:
+                                    `${userId}|${reward.name}`
+                            });
+
+                        } catch {
+
+                            options.push({
+                                label:
+                                    `${reward.name} - ${hours}h`,
+
+                                description:
+                                    `Usuario desconocido`,
+
+                                value:
+                                    `${userId}|${reward.name}`
+                            });
+                        }
+                    }
+                }
             }
 
             if (!options.length) {
@@ -712,36 +739,6 @@ options.push({
             });
         }
     );
-}
-
-if (i.isButton() &&
-    i.customId === 'aprobar_postulante') {
-
-    if (
-    !i.member.roles.cache.has(ADMIN_ROLE_ID) &&
-    !i.member.roles.cache.has(POSTULACIONES_ROLE_ID)
-) {
-        return i.reply({
-            content: '❌ No tienes permisos',
-            flags: 64
-        });
-    }
-
-    const modal = new ModalBuilder()
-        .setCustomId('modal_aprobar_postulante')
-        .setTitle('✅ Aprobar postulante');
-
-    const usuario = new TextInputBuilder()
-        .setCustomId('postulante_id')
-        .setLabel('ID del postulante')
-        .setStyle(TextInputStyle.Short);
-
-    modal.addComponents(
-        new ActionRowBuilder()
-            .addComponents(usuario)
-    );
-
-    return i.showModal(modal);
 }
 // ================= ADD WARN =================
 
