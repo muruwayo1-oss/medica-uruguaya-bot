@@ -139,19 +139,25 @@ const reminderCooldown = new Map();
 
 // ================= UTILS =================
 
-function formatTime(ms) {
+function formatTime(seconds) {
 
-    const s = Math.floor(ms / 1000);
+    const h =
+        Math.floor(seconds / 3600);
 
-    const h = Math.floor(s / 3600);
-    const m = Math.floor((s % 3600) / 60);
-    const sec = s % 60;
+    const m =
+        Math.floor(
+            (seconds % 3600) / 60
+        );
+
+    const sec =
+        seconds % 60;
 
     return [h, m, sec]
-        .map(x => String(x).padStart(2, '0'))
+        .map(x =>
+            String(x).padStart(2, '0')
+        )
         .join(':');
 }
-
 function formatHour(timestamp) {
 
     return new Date(timestamp).toLocaleTimeString(
