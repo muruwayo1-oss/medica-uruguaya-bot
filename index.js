@@ -1126,7 +1126,71 @@ ${totalStrikes}/3`
         }
     );
 }
+if (
+    i.isButton() &&
+    i.customId === 'aprobar_postulante'
+) {
 
+    if (
+        !i.member.roles.cache.has(
+            ADMIN_ROLE_ID
+        ) &&
+        !i.member.roles.cache.has(
+            POSTULACIONES_ROLE_ID
+        )
+    ) {
+
+        return i.reply({
+            content:
+                '❌ No tienes permisos',
+            flags: 64
+        });
+    }
+
+    try {
+
+        const modal =
+            new ModalBuilder()
+                .setCustomId(
+                    'modal_aprobar_postulante'
+                )
+                .setTitle(
+                    '✅ Aprobar postulante'
+                );
+
+        const usuario =
+            new TextInputBuilder()
+                .setCustomId(
+                    'postulante_id'
+                )
+                .setLabel(
+                    'ID del postulante'
+                )
+                .setStyle(
+                    TextInputStyle.Short
+                );
+
+        modal.addComponents(
+            new ActionRowBuilder()
+                .addComponents(usuario)
+        );
+
+        await i.showModal(modal);
+
+    } catch (err) {
+
+        console.log(err);
+
+        if (!i.replied) {
+
+            await i.reply({
+                content:
+                    '❌ Error abriendo modal',
+                flags: 64
+            });
+        }
+    }
+}
 if (
     i.isModalSubmit() &&
     i.customId === 'modal_aprobar_postulante'
