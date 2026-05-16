@@ -913,7 +913,7 @@ if (
             );
 
         await channel.send(
-`🎉 Felicitaciones <@${userId}>, fuiste aceptado en MEDICA URUGUAYA.`
+`🎉 Felicitaciones <@${userId}>, fuiste aceptado en MEDICA URUGUAYA. ¡Bienvenido al equipo!🩺`
         );
 
         await i.editReply({
