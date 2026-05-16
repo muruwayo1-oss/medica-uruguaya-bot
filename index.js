@@ -1641,85 +1641,72 @@ if (
 
  // ================= GUARDAR REWARD =================
 
-if (i.isModalSubmit() && i.customId === 'modal_reward') {
+if (
+    i.isModalSubmit() &&
+    i.customId === 'modal_reward'
+) {
 
-    const name = i.fields.getTextInputValue('reward_name');
+    const name =
+        i.fields.getTextInputValue(
+            'reward_name'
+        );
 
-    const reward = i.fields.getTextInputValue('reward_prize');
+    const reward =
+        i.fields.getTextInputValue(
+            'reward_prize'
+        );
 
     const hours = parseInt(
-        i.fields.getTextInputValue('reward_hours')
+        i.fields.getTextInputValue(
+            'reward_hours'
+        )
     );
 
-const desc =
-    i.fields.getTextInputValue(
-        'reward_desc'
-    );
+    const desc =
+        i.fields.getTextInputValue(
+            'reward_desc'
+        );
 
-db.run(
-    `INSERT INTO rewards
-    (name, reward, required_hours, description, created_at, active)
-    VALUES (?, ?, ?, ?, ?, 1)`,
+    db.run(
+        `INSERT INTO rewards
+        (name, reward, required_hours, description, created_at, active)
+        VALUES (?, ?, ?, ?, ?, 1)`,
 
-    [
-        name,
-        reward,
-        hours,
-        desc,
-        Date.now()
-    ],
+        [
+            name,
+            reward,
+            hours,
+            desc,
+            Date.now()
+        ],
 
-    async (err) => {
+        async (err) => {
 
-        if (err) {
+            if (err) {
 
-            console.log(err);
+                console.log(err);
 
-            return i.reply({
-                content:
-                    '❌ Error creando reward',
-                flags: 64
-            });
-        }
-
-        await i.reply({
-    content:
-        '✅ Reward creado',
-    flags: 64
-});
-
-const channel =
-    await client.channels.fetch(
-        REWARD_CHANNEL_ID
-    );
-
-channel.send(
-`📢 NUEVO REWARD ACTIVO
-
-⚠️ Todos deben reiniciar el conteo para participar correctamente del reward.
-
-Las horas elegibles comenzarán a contabilizarse desde este momento.`
-);
-
-        if (err) {
-
-            console.log(err);
-
-            return i.reply({
-                content: '❌ Error creando reward',
-                flags: 64
-            });
-        }
+                return i.reply({
+                    content:
+                        '❌ Error creando reward',
+                    flags: 64
+                });
+            }
 
             try {
 
                 const rewardChannel =
-                    await client.channels.fetch(REWARD_CHANNEL_ID);
+                    await client.channels.fetch(
+                        REWARD_CHANNEL_ID
+                    );
 
-                const embed = new EmbedBuilder()
-                    .setColor(0x00bfff)
-                    .setTitle('🎁 Nueva Recompensa Disponible')
-                    .setDescription(
+                const embed =
+                    new EmbedBuilder()
+                        .setColor(0x00bfff)
+                        .setTitle(
+                            '🎁 Nueva Recompensa Disponible'
+                        )
+                        .setDescription(
 `🏅 **${name}**
 
 🎁 Premio:
@@ -1729,108 +1716,37 @@ ${reward}
 ${hours}h
 
 📝 Descripción:
-${desc}`
-                    )
-                    .setFooter({
-                        text: 'SAME - MEDICA URUGUAYA'
-                    })
-                    .setTimestamp();
+${desc}
+
+⚠️ Todos deben reiniciar el conteo para participar correctamente del reward.`
+                        )
+                        .setFooter({
+                            text:
+                                'SAME - MEDICA URUGUAYA'
+                        })
+                        .setTimestamp();
 
                 await rewardChannel.send({
-                    content: `<@&${REWARD_ROLE_ID}>`,
+                    content:
+                        `<@&${REWARD_ROLE_ID}>`,
                     embeds: [embed]
                 });
 
             } catch (e) {
 
-                console.log('❌ Error enviando anuncio reward:', e);
+                console.log(
+                    '❌ Error enviando reward:',
+                    e
+                );
             }
 
             return i.reply({
-                content: `✅ Recompensa creada: ${name}`,
+                content:
+                    `✅ Recompensa creada: ${name}`,
                 flags: 64
             });
         }
     );
-}
-
-if (i.isModalSubmit() && i.customId === 'modal_despedir_postulante') {
-
-    await i.deferReply({ flags: 64 });
-
-    const userId =
-        i.fields.getTextInputValue(
-            'despedido_id'
-        );
-
-    try {
-
-        const guild =
-            await client.guilds.fetch(
-                GUILD_ID
-            );
-
-        const member =
-            await guild.members.fetch(
-                userId
-            );
-
-        const rolesToRemove =
-    member.roles.cache.filter(
-        role =>
-            role.id !== guild.id
-    );
-
-await member.roles.remove(
-    rolesToRemove
-);
-
-await member.roles.add(
-    DESPEDIDO_ROLE_ID
-);
-
-        const channel =
-    await client.channels.fetch(
-        DESPEDIDOS_CHANNEL_ID
-    );
-
-db.run(
-    `INSERT INTO admin_history
-    (user_id, action, admin_id, date)
-    VALUES (?, ?, ?, ?)`,
-    [
-        userId,
-        'Despedido',
-        i.user.id,
-        new Date().toLocaleString(
-    'es-UY',
-    {
-        timeZone:
-            'America/Montevideo'
-    }
-)
-    ]
-);
-        await channel.send(
-`❌ <@${userId}> Ya no forma parte de MEDICA URUGUAYA. Dependiendo del motivo, podra postularse nuevamente. `
-        );
-
-        await i.editReply({
-            content:
-                '✅ Integrante despedido',
-            flags: 64
-        });
-
-    } catch (err) {
-
-        console.log(err);
-
-        await i.editReply({
-            content:
-                '❌ Error al despedir integrante',
-            flags: 64
-        });
-    }
 }
 
     // ================= VER REWARDS =================
@@ -2019,55 +1935,45 @@ if (i.customId === 'select_entregar_reward') {
 
     const [userId, rewardName] =
         data.split('|');
-let totalTime = 0;
 
-db.get(
-    `SELECT total_time FROM weekly_time
-     WHERE user_id=?`,
-    [userId],
-    async (err, row) => {
+    db.run(
+        `INSERT INTO reward_winners
+        (user_id, reward_name, date)
+        VALUES (?, ?, ?)`,
 
-        if (row) {
+        [
+            userId,
+            rewardName,
+            new Date().toLocaleString(
+                'es-UY',
+                {
+                    timeZone:
+                        'America/Montevideo'
+                }
+            )
+        ],
 
-          totalTime = row.total_time;
-        }
+        async () => {
 
-        db.run(
-            `INSERT INTO reward_winners
-            (user_id, reward_name, date)
-            VALUES (?, ?, ?)`,
-            [
-                userId,
-                rewardName,
-                new Date().toLocaleString(
-    'es-UY',
-    {
-        timeZone:
-            'America/Montevideo'
-    }
-)
-            ],
-            async () => {
+            try {
 
-                try {
+                const rewardChannel =
+                    await client.channels.fetch(
+                        REWARD_CHANNEL_ID
+                    );
 
-                    const rewardChannel =
-                        await client.channels.fetch(
-                            REWARD_CHANNEL_ID
-                        );
-
-                    const embed = new EmbedBuilder()
+                const embed =
+                    new EmbedBuilder()
                         .setColor(0x00ff00)
-                        .setTitle('🏆 Reward Entregado')
+                        .setTitle(
+                            '🏆 Reward Entregado'
+                        )
                         .setDescription(
 `👤 Usuario:
 <@${userId}>
 
 🎁 Reward:
 ${rewardName}
-
-⏱️ Horas realizadas:
-${formatTime(totalTime).slice(0, 5)}
 
 ✅ Reward entregado automáticamente`
                         )
@@ -2077,32 +1983,30 @@ ${formatTime(totalTime).slice(0, 5)}
                         })
                         .setTimestamp();
 
-                    await rewardChannel.send({
-                        embeds: [embed]
-                    });
-
-                } catch (e) {
-
-                    console.log(
-                        '❌ Error anunciando reward:',
-                        e
-                    );
-                }
-
-                await i.reply({
-                    content:
-                        '✅ Reward entregado correctamente',
-                    flags: 64
+                await rewardChannel.send({
+                    embeds: [embed]
                 });
+
+            } catch (e) {
+
+                console.log(
+                    '❌ Error anunciando reward:',
+                    e
+                );
             }
-        );
-    }
-);
 
-return;
+            await i.reply({
+                content:
+                    '✅ Reward entregado correctamente',
+                flags: 64
+            });
+        }
+    );
 
-    
+    return;
 }
+
+// ================= ENVIAR GANADORES =================
 
 if (i.customId === 'select_reward_winners') {
 
@@ -2111,21 +2015,67 @@ if (i.customId === 'select_reward_winners') {
     db.get(
         `SELECT * FROM rewards WHERE id=?`,
         [id],
+
         async (err, rewardData) => {
 
             if (!rewardData) {
 
                 return i.reply({
-                    content: '❌ Reward no encontrada',
+                    content:
+                        '❌ Reward no encontrada',
                     flags: 64
                 });
             }
 
             db.all(
-                `SELECT * FROM weekly_time
-                WHERE total_time >= ?`,
-                [rewardData.required_hours * 3600000],
-                async (err, winners) => {
+                `SELECT * FROM sessions
+                WHERE created_at >= ?`,
+                [rewardData.created_at],
+
+                async (err, sessions) => {
+
+                    const totals = {};
+
+                    sessions.forEach(session => {
+
+                        if (
+                            !totals[
+                                session.user_id
+                            ]
+                        ) {
+
+                            totals[
+                                session.user_id
+                            ] = 0;
+                        }
+
+                        totals[
+                            session.user_id
+                        ] += session.duration;
+                    });
+
+                    const winners = [];
+
+                    Object.keys(totals)
+                        .forEach(userId => {
+
+                            const hours =
+                                Math.floor(
+                                    totals[userId]
+                                    / 3600
+                                );
+
+                            if (
+                                hours >=
+                                rewardData.required_hours
+                            ) {
+
+                                winners.push({
+                                    userId,
+                                    hours
+                                });
+                            }
+                        });
 
                     const channel =
                         await client.channels.fetch(
@@ -2144,15 +2094,20 @@ ${rewardData.reward}
 
 `;
 
-                    if (!winners || winners.length === 0) {
+                    if (
+                        winners.length === 0
+                    ) {
 
-                        txt += '❌ Nadie completó la reward';
+                        txt +=
+                            '❌ Nadie completó la reward';
 
                     } else {
 
                         winners.forEach(w => {
 
-                            txt += `• <@${w.user_id}>\n`;
+                            txt +=
+`• <@${w.userId}> - ${w.hours}h
+`;
                         });
                     }
 
@@ -2160,41 +2115,44 @@ ${rewardData.reward}
                         content: txt
                     });
 
-                 await i.editReply({
-    content: '✅ Ganadores enviados'
-});
+                    await i.editReply({
+                        content:
+                            '✅ Ganadores enviados'
+                    });
                 }
             );
         }
     );
 }
-    if (!i.member.roles.cache.has(ADMIN_ROLE_ID)) {
 
-        return i.reply({
-            content: '❌ No tienes permisos',
-            flags: 64
-        });
-    }
+// ================= ELIMINAR REWARD =================
 
-  if (i.customId === 'select_delete_reward') {
+if (i.customId === 'select_delete_reward') {
 
     const id = i.values[0];
 
     db.get(
         `SELECT * FROM rewards WHERE id=?`,
         [id],
+
         async (err, rewardData) => {
 
             if (!rewardData) {
 
-                return i.editReply({
-    content: '❌ Reward no encontrada'
-});
+                return i.reply({
+                    content:
+                        '❌ Reward no encontrada',
+                    flags: 64
+                });
             }
 
             db.run(
-                `DELETE FROM rewards WHERE id=?`,
+                `UPDATE rewards
+                SET active = 0
+                WHERE id=?`,
+
                 [id],
+
                 async () => {
 
                     try {
@@ -2204,10 +2162,13 @@ ${rewardData.reward}
                                 REWARD_CHANNEL_ID
                             );
 
-                        const embed = new EmbedBuilder()
-                            .setColor(0xff0000)
-                            .setTitle('📦 Recompensa Finalizada')
-                            .setDescription(
+                        const embed =
+                            new EmbedBuilder()
+                                .setColor(0xff0000)
+                                .setTitle(
+                                    '📦 Recompensa Finalizada'
+                                )
+                                .setDescription(
 `🏅 **${rewardData.name}**
 
 🎁 Premio:
@@ -2217,14 +2178,16 @@ ${rewardData.reward}
 ${rewardData.required_hours}h
 
 📌 Esta recompensa ya no se encuentra disponible.`
-                            )
-                            .setFooter({
-                                text: 'SAME - MEDICA URUGUAYA'
-                            })
-                            .setTimestamp();
+                                )
+                                .setFooter({
+                                    text:
+                                        'SAME - MEDICA URUGUAYA'
+                                })
+                                .setTimestamp();
 
                         await rewardChannel.send({
-                            content: `<@&${REWARD_ROLE_ID}>`,
+                            content:
+                                `<@&${REWARD_ROLE_ID}>`,
                             embeds: [embed]
                         });
 
@@ -2236,8 +2199,9 @@ ${rewardData.required_hours}h
                         );
                     }
 
-                                        await i.reply({
-                        content: '✅ Recompensa eliminada',
+                    await i.reply({
+                        content:
+                            '✅ Recompensa finalizada',
                         flags: 64
                     });
                 }
@@ -2245,7 +2209,6 @@ ${rewardData.required_hours}h
         }
     );
 }
-});
 // ================= RESUMEN DIARIO =================
 
 async function enviarResumenSemanalDiario() {
