@@ -418,8 +418,6 @@ await member.roles.add(
     DESPEDIDO_ROLE_ID
 );
 
-}
-
 } catch (err) {
 
     console.log('❌ Error quitando rol voice:', err);
