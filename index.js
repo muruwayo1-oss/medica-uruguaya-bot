@@ -90,13 +90,9 @@ db.run(`
 CREATE TABLE IF NOT EXISTS rewards (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT,
-    reward TEXT,
     required_hours INTEGER,
-    description TEXT,
-    created_at INTEGER,
-    active INTEGER DEFAULT 1
+    created_at INTEGER
 )
-
 `);
 
 db.run(`
@@ -125,6 +121,15 @@ db.run(`CREATE TABLE IF NOT EXISTS admin_history (
     admin_id TEXT,
     date TEXT
 )`);
+
+db.run(`
+CREATE TABLE IF NOT EXISTS sessions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id TEXT,
+    duration INTEGER,
+    created_at INTEGER
+)
+`);
       
 // ================= VARIABLES =================
 
@@ -204,8 +209,22 @@ async function finalizarSesion(userId, data) {
 
     const end = Date.now();
 
-    const diff = end - data.start;
+    const diff =
+        Math.floor(
+            (end - data.start) / 1000
+        );
 
+    db.run(
+        `INSERT INTO sessions
+        (user_id, duration, created_at)
+        VALUES (?, ?, ?)`,
+
+        [
+            userId,
+            diff,
+            Date.now()
+        ]
+    );
     activeUsers.delete(userId);
 
     db.run(
@@ -573,78 +592,102 @@ if (i.isButton() && i.customId === 'ver_elegibles') {
     await i.deferReply({ flags: 64 });
 
     db.all(
-        `SELECT * FROM rewards`,
+        `SELECT * FROM rewards WHERE active=1`,
         [],
         async (err, rewards) => {
 
             if (!rewards.length) {
 
                 return i.editReply({
-                    content: '❌ No hay rewards'
+                    content:
+                        '❌ No hay rewards activos'
                 });
             }
 
-            db.all(
-                `SELECT * FROM weekly_time`,
-                [],
-                async (err, users) => {
+            const options = [];
 
-                    const options = [];
+            for (const reward of rewards) {
 
-                    rewards.forEach(reward => {
+                const sessions =
+                    await new Promise((resolve, reject) => {
 
-                        users.forEach(user => {
+                        db.all(
+                            `SELECT * FROM sessions
+                            WHERE created_at >= ?`,
+                            [reward.created_at],
+                            (err, rows) => {
 
-                          const hours =
-    formatTime(user.total_time).slice(0, 5);
+                                if (err) reject(err);
 
-                            if (
-                                hours >= reward.required_hours
-                            ) {
-
-                                options.push({
-    label:
-        `${reward.name} - ${hours}`,
-    description:
-        `Usuario ${user.user_id}`,
-    value:
-        `${user.user_id}|${reward.name}`
-});
+                                else resolve(rows);
                             }
-                        });
+                        );
                     });
 
-                    if (!options.length) {
+                const totals = {};
 
-                        return i.editReply({
-                            content:
-                                '❌ No hay usuarios elegibles'
-                        });
+                sessions.forEach(session => {
+
+                    if (!totals[session.user_id]) {
+
+                        totals[session.user_id] = 0;
                     }
 
-                    const menu =
-                        new StringSelectMenuBuilder()
-                            .setCustomId(
-                                'select_entregar_reward'
-                            )
-                            .setPlaceholder(
-                                'Seleccionar ganador'
-                            )
-                            .addOptions(
-                                options.slice(0, 25)
-                            );
+                    totals[session.user_id] +=
+                        session.duration;
+                });
 
-                    const row =
-                        new ActionRowBuilder()
-                            .addComponents(menu);
+                Object.keys(totals).forEach(userId => {
 
-                    await i.editReply({
-                        content:
-                            '🏆 Usuarios elegibles',
-                        components: [row]
-                    });
-                }
-            );
+                    const hours = Math.floor(
+                        totals[userId] / 3600
+                    );
+
+                    if (
+                        hours >= reward.required_hours
+                    ) {
+
+                        options.push({
+                            label:
+                                `${reward.name} - ${hours}h`,
+                            description:
+                                `Usuario ${userId}`,
+                            value:
+                                `${userId}|${reward.name}`
+                        });
+                    }
+                });
+            }
+
+            if (!options.length) {
+
+                return i.editReply({
+                    content:
+                        '❌ No hay usuarios elegibles'
+                });
+            }
+
+            const menu =
+                new StringSelectMenuBuilder()
+                    .setCustomId(
+                        'select_entregar_reward'
+                    )
+                    .setPlaceholder(
+                        'Seleccionar ganador'
+                    )
+                    .addOptions(
+                        options.slice(0, 25)
+                    );
+
+            const row =
+                new ActionRowBuilder()
+                    .addComponents(menu);
+
+            await i.editReply({
+                content:
+                    '🏆 Usuarios elegibles',
+                components: [row]
+            });
         }
     );
 }
@@ -1608,20 +1651,53 @@ if (i.isModalSubmit() && i.customId === 'modal_reward') {
         i.fields.getTextInputValue('reward_hours')
     );
 
-    const desc = i.fields.getTextInputValue('reward_desc');
+const desc =
+    i.fields.getTextInputValue(
+        'reward_desc'
+    );
 
 db.run(
     `INSERT INTO rewards
-    (name, reward, required_hours, description, created_at, active)
-    VALUES (?, ?, ?, ?, ?, 1)`,
+    (name, required_hours, created_at)
+    VALUES (?, ?, ?)`,
+
     [
-        name,
-        reward,
-        hours,
-        desc,
+        rewardName,
+        requiredHours,
         Date.now()
     ],
+
     async (err) => {
+
+        if (err) {
+
+            console.log(err);
+
+            return i.reply({
+                content:
+                    '❌ Error creando reward',
+                flags: 64
+            });
+        }
+
+        await i.reply({
+    content:
+        '✅ Reward creado',
+    flags: 64
+});
+
+const channel =
+    await client.channels.fetch(
+        REWARD_CHANNEL_ID
+    );
+
+channel.send(
+`📢 NUEVO REWARD ACTIVO
+
+⚠️ Todos deben reiniciar el conteo para participar correctamente del reward.
+
+Las horas elegibles comenzarán a contabilizarse desde este momento.`
+);
 
         if (err) {
 
