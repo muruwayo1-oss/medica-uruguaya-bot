@@ -656,8 +656,24 @@ if (i.isButton() && i.customId === 'ver_elegibles') {
                         options.push({
                             label:
                                 `${reward.name} - ${hours}h`,
-                            description:
-                                `Usuario ${userId}`,
+                            const guild =
+    await client.guilds.fetch(
+        GUILD_ID
+    );
+
+const member =
+    await guild.members.fetch(
+        user.user_id
+    );
+
+options.push({
+    label:
+        `${reward.name} - ${hours}h`,
+    description:
+        `${member.displayName}`,
+    value:
+        `${user.user_id}|${reward.name}`
+});
                             value:
                                 `${userId}|${reward.name}`
                         });
