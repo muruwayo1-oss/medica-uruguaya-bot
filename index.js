@@ -921,6 +921,8 @@ if (
                 '✅ Postulación aprobada'
         });
 
+await i.message.delete();
+
     } catch (err) {
 
         console.log(err);
