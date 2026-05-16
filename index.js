@@ -415,24 +415,11 @@ async function enviarPanel() {
                 PANEL_CHANNEL_ID
             );
 
-        const postularBtn =
-            new ButtonBuilder()
-                .setCustomId(
-                    'postularme'
-                )
-                .setLabel(
-                    '📝 Postularme'
-                )
-                .setStyle(
-                    ButtonStyle.Primary
-                );
-
         const row =
             new ActionRowBuilder()
                 .addComponents(
 
-                    postularBtn,
-
+                 
                     new ButtonBuilder()
                         .setCustomId(
                             'iniciar'
