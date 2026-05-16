@@ -347,6 +347,14 @@ Gracias por ser parte del SAME-MEDICA URUGUAYA 🙌`
         if (!data) return;
 
         await finalizarSesion(userId, data);
+const channel =
+    await client.channels.fetch(
+        PANEL_CHANNEL_ID
+    );
+
+channel.send(
+    `⏹️ <@${userId}> salió del canal de voz y el conteo fue detenido automáticamente.`
+);
 try {
 
     const user =
