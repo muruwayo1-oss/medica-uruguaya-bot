@@ -1658,12 +1658,14 @@ const desc =
 
 db.run(
     `INSERT INTO rewards
-    (name, required_hours, created_at)
-    VALUES (?, ?, ?)`,
+    (name, reward, required_hours, description, created_at, active)
+    VALUES (?, ?, ?, ?, ?, 1)`,
 
     [
-        rewardName,
-        requiredHours,
+        name,
+        reward,
+        hours,
+        desc,
         Date.now()
     ],
 
