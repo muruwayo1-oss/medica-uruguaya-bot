@@ -2209,6 +2209,8 @@ ${rewardData.required_hours}h
         }
     );
 }
+
+});
 // ================= RESUMEN DIARIO =================
 
 async function enviarResumenSemanalDiario() {
