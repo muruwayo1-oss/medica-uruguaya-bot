@@ -1196,11 +1196,14 @@ if (
     i.customId === 'modal_aprobar_postulante'
 ) {
 
+    await i.deferReply({
+        flags: 64
+    });
+
     const userId =
         i.fields.getTextInputValue(
             'postulante_id'
         );
-
     try {
 
         const channel =
@@ -1253,7 +1256,7 @@ db.run(
 `🎉 Felicitaciones <@${userId}>, fuiste aceptado en MEDICA URUGUAYA. ¡Bienvenido al equipo! 🩺`
         );
 
-        await i.reply({
+        await i.editReply({
             content:
                 '✅ Postulante aprobado',
             flags: 64
@@ -1263,7 +1266,7 @@ db.run(
 
         console.log(err);
 
-        await i.reply({
+        await i.editReply({
             content:
                 '❌ Error enviando anuncio',
             flags: 64
