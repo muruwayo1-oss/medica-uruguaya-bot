@@ -62,7 +62,7 @@ const client = new Client({
 
 // ================= DB =================
 
-const db = new sqlite3.Database('./voice.db');
+const db = new sqlite3.Database('/data/medica.db');
 
 db.run(`CREATE TABLE IF NOT EXISTS sanctions (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -347,14 +347,7 @@ Gracias por ser parte del SAME-MEDICA URUGUAYA 🙌`
         if (!data) return;
 
         await finalizarSesion(userId, data);
-const channel =
-    await client.channels.fetch(
-        PANEL_CHANNEL_ID
-    );
 
-channel.send(
-    `⏹️ <@${userId}> salió del canal de voz y el conteo fue detenido automáticamente.`
-);
 try {
 
     const user =
