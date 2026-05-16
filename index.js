@@ -653,7 +653,7 @@ async function enviarPanelPostulacion() {
 Si deseas formar parte del equipo:
 
 🩺 Completa la postulación
-📚 Espera revisión staff
+📚 Espera revisión de los Instructores
 ✅ Recibirás respuesta automática`
                 )
                 .setFooter({
