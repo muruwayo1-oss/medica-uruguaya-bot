@@ -742,7 +742,7 @@ if (
                 'motivo'
             )
             .setLabel(
-                '¿Por qué quieres entrar a la faccion? Sabes el reglamento del SAME?'
+                '¿Por qué quieres entrar a la faccion?'
             )
             .setStyle(
                 TextInputStyle.Paragraph
