@@ -27,6 +27,8 @@ const LOG_CHANNEL_ID = '1504642945805058108';
 const TOP_CHANNEL_ID = '1504638369320275969';       // 🏆 Top 5
 const LIST_CHANNEL_ID = '1504642738468032603';  // 📊 listado completo
 
+const PANEL_POSTULACIONES_ID = '1190361131403989012';
+const POSTULACIONES_CHANNEL_ID = '1505088263151554621';
 const PANEL_CHANNEL_ID = '1504642028611436625';
 const ADMIN_ROLE_ID = '1463173572209152182';
 const MOD_ROLE_ID = '1504658756875587604';
@@ -408,26 +410,62 @@ async function enviarPanel() {
 
     try {
 
-        const ch = await client.channels.fetch(PANEL_CHANNEL_ID);
+        const ch =
+            await client.channels.fetch(
+                PANEL_CHANNEL_ID
+            );
 
-        const row = new ActionRowBuilder()
-    .addComponents(
+        const postularBtn =
+            new ButtonBuilder()
+                .setCustomId(
+                    'postularme'
+                )
+                .setLabel(
+                    '📝 Postularme'
+                )
+                .setStyle(
+                    ButtonStyle.Primary
+                );
 
-        new ButtonBuilder()
-            .setCustomId('iniciar')
-            .setLabel('▶️ Iniciar')
-            .setStyle(ButtonStyle.Primary),
+        const row =
+            new ActionRowBuilder()
+                .addComponents(
 
-        new ButtonBuilder()
-            .setCustomId('detener')
-            .setLabel('⏹️ Detener')
-            .setStyle(ButtonStyle.Danger),
+                    postularBtn,
 
-        new ButtonBuilder()
-            .setCustomId('ranking')
-            .setLabel('📅 Ranking')
-            .setStyle(ButtonStyle.Success)
-    );
+                    new ButtonBuilder()
+                        .setCustomId(
+                            'iniciar'
+                        )
+                        .setLabel(
+                            '▶️ Iniciar'
+                        )
+                        .setStyle(
+                            ButtonStyle.Primary
+                        ),
+
+                    new ButtonBuilder()
+                        .setCustomId(
+                            'detener'
+                        )
+                        .setLabel(
+                            '⏹️ Detener'
+                        )
+                        .setStyle(
+                            ButtonStyle.Danger
+                        ),
+
+                    new ButtonBuilder()
+                        .setCustomId(
+                            'ranking'
+                        )
+                        .setLabel(
+                            '📅 Ranking'
+                        )
+                        .setStyle(
+                            ButtonStyle.Success
+                        )
+                );
 
         await ch.send({
             embeds: [
@@ -578,6 +616,64 @@ await adminCh.send({
     }
 }
 
+async function enviarPanelPostulacion() {
+
+    try {
+
+        const ch =
+            await client.channels.fetch(
+                PANEL_POSTULACIONES_ID
+            );
+
+        const row =
+            new ActionRowBuilder()
+                .addComponents(
+
+                    new ButtonBuilder()
+                        .setCustomId(
+                            'postularme'
+                        )
+                        .setLabel(
+                            '📝 Postularme'
+                        )
+                        .setStyle(
+                            ButtonStyle.Primary
+                        )
+                );
+
+        const embed =
+            new EmbedBuilder()
+                .setColor(0x00bfff)
+                .setTitle(
+                    '📋 Postulaciones SAME'
+                )
+                .setDescription(
+`Bienvenido a MEDICA URUGUAYA.
+
+Si deseas formar parte del equipo:
+
+🩺 Completa la postulación
+📚 Espera revisión staff
+✅ Recibirás respuesta automática`
+                )
+                .setFooter({
+                    text:
+                        'MEDICA URUGUAYA'
+                });
+
+        await ch.send({
+            embeds: [embed],
+            components: [row]
+        });
+
+    } catch (err) {
+
+        console.log(
+            '❌ Error enviando panel postulaciones:',
+            err
+        );
+    }
+}
 
 
 // ================= INTERACCIONES =================
@@ -591,6 +687,282 @@ client.on('interactionCreate', async i => {
     ) return;
 
     const userId = i.user.id;
+if (
+    i.isButton() &&
+    i.customId === 'postularme'
+) {
+
+    const modal =
+        new ModalBuilder()
+            .setCustomId(
+                'modal_postulacion'
+            )
+            .setTitle(
+                '📋 Postulación'
+            );
+
+    const nombre =
+        new TextInputBuilder()
+            .setCustomId(
+                'nombre_ic'
+            )
+            .setLabel(
+                'Nombre IC'
+            )
+            .setStyle(
+                TextInputStyle.Short
+            );
+
+    const edad =
+        new TextInputBuilder()
+            .setCustomId(
+                'edad'
+            )
+            .setLabel(
+                'Edad Real'
+            )
+            .setStyle(
+                TextInputStyle.Short
+            );
+
+    const experiencia =
+        new TextInputBuilder()
+            .setCustomId(
+                'experiencia'
+            )
+            .setLabel(
+                'Ya tienes experiencia como SAME?'
+            )
+            .setStyle(
+                TextInputStyle.Paragraph
+            );
+
+    const horarios =
+        new TextInputBuilder()
+            .setCustomId(
+                'horarios'
+            )
+            .setLabel(
+                'Horarios disponibles para estar en servicio?'
+            )
+            .setStyle(
+                TextInputStyle.Short
+            );
+
+    const motivo =
+        new TextInputBuilder()
+            .setCustomId(
+                'motivo'
+            )
+            .setLabel(
+                '¿Por qué quieres entrar a la faccion? Sabes el reglamento del SAME?'
+            )
+            .setStyle(
+                TextInputStyle.Paragraph
+            );
+
+    modal.addComponents(
+        new ActionRowBuilder()
+            .addComponents(nombre),
+
+        new ActionRowBuilder()
+            .addComponents(edad),
+
+        new ActionRowBuilder()
+            .addComponents(experiencia),
+
+        new ActionRowBuilder()
+            .addComponents(horarios),
+
+        new ActionRowBuilder()
+            .addComponents(motivo)
+    );
+
+    return i.showModal(modal);
+}
+
+if (
+    i.isModalSubmit() &&
+    i.customId === 'modal_postulacion'
+) {
+
+    await i.deferReply({
+        flags: 64
+    });
+
+    const nombre =
+        i.fields.getTextInputValue(
+            'nombre_ic'
+        );
+
+    const edad =
+        i.fields.getTextInputValue(
+            'edad'
+        );
+
+    const experiencia =
+        i.fields.getTextInputValue(
+            'experiencia'
+        );
+
+    const horarios =
+        i.fields.getTextInputValue(
+            'horarios'
+        );
+
+    const motivo =
+        i.fields.getTextInputValue(
+            'motivo'
+        );
+
+    const embed =
+        new EmbedBuilder()
+            .setColor(0x00bfff)
+            .setTitle(
+                '📋 Nueva Postulación'
+            )
+            .setDescription(
+`👤 Usuario:
+<@${i.user.id}>
+
+🩺 Nombre IC:
+${nombre}
+
+🎂 Edad:
+${edad}
+
+📚 Experiencia:
+${experiencia}
+
+🕓 Horarios:
+${horarios}
+
+📝 Motivo:
+${motivo}`
+            )
+            .setFooter({
+                text:
+                    'MEDICA URUGUAYA'
+            })
+            .setTimestamp();
+
+    const aprobar =
+        new ButtonBuilder()
+            .setCustomId(
+                `aprobar_${i.user.id}`
+            )
+            .setLabel(
+                '✅ Aprobar'
+            )
+            .setStyle(
+                ButtonStyle.Success
+            );
+
+    const rechazar =
+        new ButtonBuilder()
+            .setCustomId(
+                `rechazar_${i.user.id}`
+            )
+            .setLabel(
+                '❌ Rechazar'
+            )
+            .setStyle(
+                ButtonStyle.Danger
+            );
+
+    const row =
+        new ActionRowBuilder()
+            .addComponents(
+                aprobar,
+                rechazar
+            );
+
+    const channel =
+        await client.channels.fetch(
+            POSTULACIONES_CHANNEL_ID
+        );
+
+    await channel.send({
+        embeds: [embed],
+        components: [row]
+    });
+
+    await i.editReply({
+        content:
+            '✅ Tu postulación fue enviada correctamente'
+    });
+}
+if (
+    i.isButton() &&
+    i.customId.startsWith('aprobar_')
+) {
+
+    await i.deferReply({
+        flags: 64
+    });
+
+    const userId =
+        i.customId.split('_')[1];
+
+    try {
+
+        const guild =
+            await client.guilds.fetch(
+                GUILD_ID
+            );
+
+        const member =
+            await guild.members.fetch(
+                userId
+            );
+
+        await member.roles.add(
+            POSTULANTE_ROLE_ID
+        );
+
+        const channel =
+            await client.channels.fetch(
+                APROBADOS_CHANNEL_ID
+            );
+
+        await channel.send(
+`🎉 Felicitaciones <@${userId}>, fuiste aceptado en MEDICA URUGUAYA.`
+        );
+
+        await i.editReply({
+            content:
+                '✅ Postulación aprobada'
+        });
+
+    } catch (err) {
+
+        console.log(err);
+
+        await i.editReply({
+            content:
+                '❌ Error aprobando postulante'
+        });
+    }
+}
+
+if (
+    i.isButton() &&
+    i.customId.startsWith('rechazar_')
+) {
+
+    await i.deferReply({
+        flags: 64
+    });
+
+    const userId =
+        i.customId.split('_')[1];
+
+    await i.editReply({
+        content:
+            `❌ Postulación rechazada para <@${userId}>`
+    });
+}
+
 // ================= VER ELEGIBLES =================
 if (i.isButton() && i.customId === 'ver_elegibles') {
 
@@ -2804,6 +3176,8 @@ client.on('interactionCreate', async i => {
 
         await enviarPanel();
 
+await enviarPanelPostulacion();
+
         await i.reply({
             content:
                 '✅ Panel enviado',
@@ -2821,6 +3195,7 @@ client.on('interactionCreate', async i => {
         });
     }
 });
+
 // ================= LOGIN =================
 
 client.login(TOKEN);
