@@ -392,21 +392,26 @@ try {
 } catch {}
 
 // quitar rol al salir del voice
+
 try {
 
     const guild = await client.guilds.fetch(GUILD_ID);
 
     const member = await guild.members.fetch(userId);
 
-    await member.roles.remove(SERVICE_ROLE_ID);
+await member.roles.remove(
+    SERVICE_ROLE_ID
+);
 
 } catch (err) {
 
-    console.log('❌ Error quitando rol voice:', err);
-}
-    }
-});
+    console.log(err);
 
+    await i.editReply({
+        content:
+            '❌ Algo ha fallado'
+    });
+}
 // ================= PANEL =================
 
 async function enviarPanel() {
