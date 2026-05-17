@@ -3144,22 +3144,22 @@ const enfermero =
                 .addFields(
 {
                         name:
-                            '👨‍⚕️ CIRUJANO',
+                            '👨‍⚕️ CIRUJANOS',
                         value:
-                            cirujano
+                            cirujanos
                     },
 
                     {
                         name:
-                            '👨‍⚕️ MÉDICO',
+                            '👨‍⚕️ MÉDICOS',
                         value:
-                            medico
+                            medicos
                     },
 {
                         name:
-                            '👨‍⚕️ ENFERMERO',
+                            '👨‍⚕️ ENFERMEROS',
                         value:
-                            enfermero
+                            enfermeros
                     },
 
                     {
