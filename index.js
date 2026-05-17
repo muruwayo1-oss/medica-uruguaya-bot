@@ -66,61 +66,6 @@ const client = new Client({
 
 const db = new sqlite3.Database('/data/medica.db');
 
-db.run(`DELETE FROM weekly_time`);
-
-db.all(
-    `SELECT * FROM sessions`,
-    [],
-    (err, rows) => {
-
-        rows.forEach(session => {
-
-            const date =
-                new Date(
-                    session.created_at
-                );
-
-            const oneJan =
-                new Date(
-                    date.getFullYear(),
-                    0,
-                    1
-                );
-
-            const num =
-                Math.floor(
-                    (date - oneJan) /
-                    86400000
-                );
-
-            const week =
-`${date.getFullYear()}-W${
-Math.ceil(
-(date.getDay() + 1 + num) / 7
-)
-}`;
-
-            db.run(`
-                INSERT INTO weekly_time
-                VALUES (?, ?, ?)
-                ON CONFLICT(user_id, week)
-                DO UPDATE SET total_time = total_time + ?
-            `,
-            [
-                session.user_id,
-                week,
-                session.duration,
-                session.duration
-            ]);
-        });
-
-        console.log(
-            '✅ WEEKLY_TIME RECONSTRUIDA'
-        );
-    }
-);
-
-
 db.run(`CREATE TABLE IF NOT EXISTS sanctions (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id TEXT,
