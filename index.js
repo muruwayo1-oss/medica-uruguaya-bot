@@ -66,6 +66,11 @@ const client = new Client({
 
 const db = new sqlite3.Database('/data/medica.db');
 
+db.run(`
+    UPDATE weekly_time
+    SET total_time = total_time / 1000
+`);
+
 db.run(`CREATE TABLE IF NOT EXISTS sanctions (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id TEXT,
