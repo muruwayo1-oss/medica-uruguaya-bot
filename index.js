@@ -2080,13 +2080,32 @@ if (
                 userId
             );
 
-        await member.roles.remove(
-            SERVICE_ROLE_ID
-        );
+        const rolesToRemove =
+    member.roles.cache.filter(
+        role =>
+            role.id !== guild.id &&
+            !role.managed &&
+            role.position <
+            guild.members.me.roles.highest.position
+    );
+
+await member.roles.remove(
+    rolesToRemove
+);
 
         await member.roles.add(
             DESPEDIDO_ROLE_ID
         );
+
+const channel =
+    await client.channels.fetch(
+        PUBLIC_SANCTION_CHANNEL_ID
+    );
+
+await channel.send({
+    content:
+        `❌ <@${userId}> No pertenece mas al equipo de MEDICA URUGUAYA`
+});
 
         await i.editReply({
             content:
