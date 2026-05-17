@@ -3099,7 +3099,7 @@ const cirujano =
         .join('\n') ||
     'Sin integrantes';
 
-        const medicos =
+        const medico =
             guild.roles.cache
                 .get(MEDICO_ROLE_ID)
                 ?.members.map(
@@ -3117,7 +3117,7 @@ const enfermero =
         .join('\n') ||
     'Sin integrantes';
 
-        const paramedicos =
+        const paramedico =
             guild.roles.cache
                 .get(PARAMEDICO_ROLE_ID)
                 ?.members.map(
@@ -3126,7 +3126,7 @@ const enfermero =
                 .join('\n') ||
             'Sin integrantes';
 
-        const internor =
+        const interno =
             guild.roles.cache
                 .get(INTERNO_ROLE_ID)
                 ?.members.map(
