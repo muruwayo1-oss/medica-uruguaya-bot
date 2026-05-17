@@ -407,11 +407,9 @@ await member.roles.remove(
 
     console.log(err);
 
-    await i.editReply({
-        content:
-            '❌ Algo ha fallado'
-    });
-}
+   }
+
+});
 // ================= PANEL =================
 
 async function enviarPanel() {
