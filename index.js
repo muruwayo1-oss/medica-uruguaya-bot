@@ -2645,35 +2645,32 @@ if (i.customId === 'select_delete_reward') {
                 });
             }
 
-          db.run(
+        db.run(
     `UPDATE rewards
      SET active=0,
      ended_at=?
      WHERE id=?`,
     [
         Date.now(),
-        rewardId
-    ]
-);
+        id
+    ],
 
-                [id],
+    async () => {
 
-                async () => {
+        try {
 
-                    try {
+            const rewardChannel =
+                await client.channels.fetch(
+                    REWARD_CHANNEL_ID
+                );
 
-                        const rewardChannel =
-                            await client.channels.fetch(
-                                REWARD_CHANNEL_ID
-                            );
-
-                        const embed =
-                            new EmbedBuilder()
-                                .setColor(0xff0000)
-                                .setTitle(
-                                    '📦 Recompensa Finalizada'
-                                )
-                                .setDescription(
+            const embed =
+                new EmbedBuilder()
+                    .setColor(0xff0000)
+                    .setTitle(
+                        '📦 Recompensa Finalizada'
+                    )
+                    .setDescription(
 `🏅 **${rewardData.name}**
 
 🎁 Premio:
@@ -2683,34 +2680,35 @@ ${rewardData.reward}
 ${rewardData.required_hours}h
 
 📌 Esta recompensa ya no se encuentra disponible.`
-                                )
-                                .setFooter({
-                                    text:
-                                        'SAME - MEDICA URUGUAYA'
-                                })
-                                .setTimestamp();
+                    )
+                    .setFooter({
+                        text:
+                            'SAME - MEDICA URUGUAYA'
+                    })
+                    .setTimestamp();
 
-                        await rewardChannel.send({
-                            content:
-                                `<@&${REWARD_ROLE_ID}>`,
-                            embeds: [embed]
-                        });
+            await rewardChannel.send({
+                content:
+                    `<@&${REWARD_ROLE_ID}>`,
+                embeds: [embed]
+            });
 
-                    } catch (e) {
+        } catch (e) {
 
-                        console.log(
-                            '❌ Error enviando finalización reward:',
-                            e
-                        );
-                    }
-
-                    await i.reply({
-                        content:
-                            '✅ Recompensa finalizada',
-                        flags: 64
-                    });
-                }
+            console.log(
+                '❌ Error enviando finalización reward:',
+                e
             );
+        }
+
+        await i.reply({
+            content:
+                '✅ Recompensa finalizada',
+            flags: 64
+        });
+    }
+);
+            
         }
     );
 }
