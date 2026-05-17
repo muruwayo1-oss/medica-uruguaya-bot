@@ -2321,12 +2321,13 @@ if (i.isButton() && i.customId === 'ver_ganadores') {
             });
 
             await i.editReply({
-                content: txt
+              content: txt
             });
         }
     );
 }
 
+});
     // ================= ELIMINAR REWARD =================
 
     if (i.isButton() && i.customId === 'eliminar_reward') {
