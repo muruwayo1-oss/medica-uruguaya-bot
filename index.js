@@ -51,6 +51,13 @@ const DESPEDIDO_ROLE_ID = '1462190071037034518';
 const DESPEDIDOS_CHANNEL_ID = '1466942656713195552';
 
 const POSTULACIONES_ROLE_ID = '1492269491264950524';
+
+const CIRUJANO_ROLE_ID = '1462187887750545645';
+const MEDICO_ROLE_ID = '1462187613560508468';
+const ENFERMERO_ROLE_ID = '1462187457083605207';
+const PARAMEDICO_ROLE_ID = '1462187268914548970';
+const INTERNO_ROLE_ID = '1462850464470012219';
+
 // ================== CLIENT ==================
 
 const client = new Client({
@@ -2923,6 +2930,15 @@ await guild.commands.create(
         )
 );
 
+await guild.commands.create(
+    new SlashCommandBuilder()
+        .setName('listado')
+        .setDescription(
+            'Ver listado del personal'
+        )
+);
+
+
     // ================= SESIONES ACTIVAS =================
 
     db.all(
@@ -2946,6 +2962,8 @@ client.on('interactionCreate', async i => {
 
     if (!i.isChatInputCommand()) return;
 
+    // ================= PERFIL =================
+
     if (i.commandName === 'perfil') {
 
         if (
@@ -2962,19 +2980,19 @@ client.on('interactionCreate', async i => {
 
         }
 
-      const week = getWeek();
+        const week = getWeek();
 
-db.get(
-    `SELECT * FROM weekly_time
-    WHERE user_id=? AND week=?`,
-    [i.user.id, week],
-    async (err, row) => {
+        db.get(
+            `SELECT * FROM weekly_time
+            WHERE user_id=? AND week=?`,
+            [i.user.id, week],
+            async (err, row) => {
 
-        db.all(
-            `SELECT * FROM sanctions
-            WHERE user_id=?`,
-            [i.user.id],
-            async (err, sanctions) => {
+                db.all(
+                    `SELECT * FROM sanctions
+                    WHERE user_id=?`,
+                    [i.user.id],
+                    async (err, sanctions) => {
 
                         const warns =
                             sanctions.filter(
@@ -3044,7 +3062,128 @@ db.get(
             }
         );
     }
+
+    // ================= LISTADO =================
+
+    if (
+        i.commandName === 'listado'
+    ) {
+
+        if (
+            !i.member.roles.cache.has(
+                ADMIN_ROLE_ID
+            ) &&
+            !i.member.roles.cache.has(
+                MOD_ROLE_ID
+            )
+        ) {
+
+            return i.reply({
+                content:
+                    '❌ No tienes permisos',
+                flags: 64
+            });
+        }
+
+        const guild =
+            await client.guilds.fetch(
+                GUILD_ID
+            ); 
+
+const cirujano =
+    guild.roles.cache
+        .get(CIRUJANO_ROLE_ID)
+        ?.members.map(
+            m => `• ${m.user.tag}`
+        )
+        .join('\n') ||
+    'Sin integrantes';
+
+        const medicos =
+            guild.roles.cache
+                .get(MEDICO_ROLE_ID)
+                ?.members.map(
+                    m => `• ${m.user.tag}`
+                )
+                .join('\n') ||
+            'Sin integrantes';
+
+const enfermero =
+    guild.roles.cache
+        .get(ENFERMERO_ROLE_ID)
+        ?.members.map(
+            m => `• ${m.user.tag}`
+        )
+        .join('\n') ||
+    'Sin integrantes';
+
+        const paramedicos =
+            guild.roles.cache
+                .get(PARAMEDICO_ROLE_ID)
+                ?.members.map(
+                    m => `• ${m.user.tag}`
+                )
+                .join('\n') ||
+            'Sin integrantes';
+
+        const internor =
+            guild.roles.cache
+                .get(INTERNO_ROLE_ID)
+                ?.members.map(
+                    m => `• ${m.user.tag}`
+                )
+                .join('\n') ||
+            'Sin integrantes';
+
+        const embed =
+            new EmbedBuilder()
+                .setColor(0x00bfff)
+                .setTitle(
+                    '📋 Listado del Personal'
+                )
+                .addFields(
+{
+                        name:
+                            '👨‍⚕️ CIRUJANO',
+                        value:
+                            cirujano
+                    },
+
+                    {
+                        name:
+                            '👨‍⚕️ MÉDICO',
+                        value:
+                            medico
+                    },
+{
+                        name:
+                            '👨‍⚕️ ENFERMERO',
+                        value:
+                            enfermero
+                    },
+
+                    {
+                        name:
+                            '🚑 PARAMÉDICOS',
+                        value:
+                            paramedicos
+                    },
+                    {
+                        name:
+                            '🛡️ INTERNOS',
+                        value:
+                            internos
+                    }
+                );
+
+        await i.reply({
+            embeds: [embed],
+            flags: 64
+        });
+    }
+
 });
+
 
 client.on('interactionCreate', async i => {
 
