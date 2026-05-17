@@ -407,8 +407,11 @@ await member.roles.remove(
 
     console.log(err);
 
-   }
+}
 
+}
+
+});
 // ================= PANEL =================
 
 async function enviarPanel() {
