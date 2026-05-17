@@ -2099,12 +2099,12 @@ await member.roles.remove(
 
 const channel =
     await client.channels.fetch(
-        PUBLIC_SANCTION_CHANNEL_ID
+        DESPEDIDOS_CHANNEL_ID
     );
 
 await channel.send({
     content:
-        `❌ <@${userId}> No pertenece mas al equipo de MEDICA URUGUAYA`
+        `❌ <@${userId}> No pertenece mas al equipo de MEDICA URUGUAYA!`
 });
 
         await i.editReply({
