@@ -215,6 +215,10 @@ function getWeek() {
 
 async function finalizarSesion(userId, data) {
 
+if (!activeUsers.has(userId)) {
+        return;
+    }
+
     const end = Date.now();
 
     const diff =
