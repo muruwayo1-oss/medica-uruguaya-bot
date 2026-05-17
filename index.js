@@ -95,8 +95,6 @@ db.run(`CREATE TABLE IF NOT EXISTS active_sessions (
     channel_name TEXT
 )`);
 
-db.run(`DROP TABLE IF EXISTS rewards`);
-
 db.run(`
 CREATE TABLE IF NOT EXISTS rewards (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -105,7 +103,6 @@ CREATE TABLE IF NOT EXISTS rewards (
     description TEXT,
     required_hours INTEGER,
     created_at INTEGER,
-    ended_at INTEGER,
     active INTEGER DEFAULT 1
 )
 `);
@@ -1002,28 +999,26 @@ if (i.isButton() && i.customId === 'ver_elegibles') {
 
             for (const reward of rewards) {
 
-                const sessions = await new Promise(
-    (resolve, reject) => {
+                const sessions =
+                    await new Promise(
+                        (resolve, reject) => {
 
-        db.all(
-            `SELECT * FROM sessions
-             WHERE created_at >= ?
-             AND created_at <= ?`,
-            [
-                reward.created_at,
-                reward.ended_at || Date.now()
-            ],
-            (err, rows) => {
+                            db.all(
+                                `SELECT * FROM sessions
+                                WHERE created_at >= ?`,
+                                [reward.created_at],
 
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(rows);
-                }
-            }
-        );
-    }
-);
+                                (err, rows) => {
+
+                                    if (err)
+                                        reject(err);
+
+                                    else
+                                        resolve(rows);
+                                }
+                            );
+                        }
+                    );
 
                 const totals = {};
 
@@ -2321,7 +2316,7 @@ if (i.isButton() && i.customId === 'ver_ganadores') {
             });
 
             await i.editReply({
-              content: txt
+                content: txt
             });
         }
     );
@@ -2645,32 +2640,29 @@ if (i.customId === 'select_delete_reward') {
                 });
             }
 
-        db.run(
-    `UPDATE rewards
-     SET active=0,
-     ended_at=?
-     WHERE id=?`,
-    [
-        Date.now(),
-        id
-    ],
+            db.run(
+                `UPDATE rewards
+                SET active = 0
+                WHERE id=?`,
 
-    async () => {
+                [id],
 
-        try {
+                async () => {
 
-            const rewardChannel =
-                await client.channels.fetch(
-                    REWARD_CHANNEL_ID
-                );
+                    try {
 
-            const embed =
-                new EmbedBuilder()
-                    .setColor(0xff0000)
-                    .setTitle(
-                        '📦 Recompensa Finalizada'
-                    )
-                    .setDescription(
+                        const rewardChannel =
+                            await client.channels.fetch(
+                                REWARD_CHANNEL_ID
+                            );
+
+                        const embed =
+                            new EmbedBuilder()
+                                .setColor(0xff0000)
+                                .setTitle(
+                                    '📦 Recompensa Finalizada'
+                                )
+                                .setDescription(
 `🏅 **${rewardData.name}**
 
 🎁 Premio:
@@ -2680,39 +2672,39 @@ ${rewardData.reward}
 ${rewardData.required_hours}h
 
 📌 Esta recompensa ya no se encuentra disponible.`
-                    )
-                    .setFooter({
-                        text:
-                            'SAME - MEDICA URUGUAYA'
-                    })
-                    .setTimestamp();
+                                )
+                                .setFooter({
+                                    text:
+                                        'SAME - MEDICA URUGUAYA'
+                                })
+                                .setTimestamp();
 
-            await rewardChannel.send({
-                content:
-                    `<@&${REWARD_ROLE_ID}>`,
-                embeds: [embed]
-            });
+                        await rewardChannel.send({
+                            content:
+                                `<@&${REWARD_ROLE_ID}>`,
+                            embeds: [embed]
+                        });
 
-        } catch (e) {
+                    } catch (e) {
 
-            console.log(
-                '❌ Error enviando finalización reward:',
-                e
+                        console.log(
+                            '❌ Error enviando finalización reward:',
+                            e
+                        );
+                    }
+
+                    await i.reply({
+                        content:
+                            '✅ Recompensa finalizada',
+                        flags: 64
+                    });
+                }
             );
-        }
-
-        await i.reply({
-            content:
-                '✅ Recompensa finalizada',
-            flags: 64
-        });
-    }
-);
-            
         }
     );
 }
 
+});
 // ================= RESUMEN DIARIO =================
 
 async function enviarResumenSemanalDiario() {
