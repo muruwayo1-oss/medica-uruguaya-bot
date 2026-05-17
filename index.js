@@ -52,11 +52,11 @@ const DESPEDIDOS_CHANNEL_ID = '1466942656713195552';
 
 const POSTULACIONES_ROLE_ID = '1492269491264950524';
 
-const CIRUJANOS_ROLE_ID = '1462187887750545645';
-const MEDICOS_ROLE_ID = '1462187613560508468';
-const ENFERMEROS_ROLE_ID = '1462187457083605207';
-const PARAMEDICOS_ROLE_ID = '1462187268914548970';
-const INTERNOS_ROLE_ID = '1462850464470012219';
+const CIRUJANO_ROLE_ID = '1462187887750545645';
+const MEDICO_ROLE_ID = '1462187613560508468';
+const ENFERMERO_ROLE_ID = '1462187457083605207';
+const PARAMEDICO_ROLE_ID = '1462187268914548970';
+const INTERNO_ROLE_ID = '1462850464470012219';
 
 // ================== CLIENT ==================
 
@@ -3144,35 +3144,35 @@ const enfermero =
                 .addFields(
 {
                         name:
-                            '👨‍⚕️ CIRUJANOS',
+                            '👨‍⚕️ CIRUJANO',
                         value:
-                            cirujanos
+                            cirujano
                     },
 
                     {
                         name:
-                            '👨‍⚕️ MÉDICOS',
+                            '👨‍⚕️ MÉDICO',
                         value:
-                            medicos
+                            medico
                     },
 {
                         name:
-                            '👨‍⚕️ ENFERMEROS',
+                            '👨‍⚕️ ENFERMERO',
                         value:
-                            enfermeros
+                            enfermero
                     },
 
                     {
                         name:
-                            '🚑 PARAMÉDICOS',
+                            '🚑 PARAMÉDICO',
                         value:
-                            paramedicos
+                            paramedico
                     },
                     {
                         name:
-                            '🛡️ INTERNOS',
+                            '🛡️ INTERNO',
                         value:
-                            internos
+                            interno
                     }
                 );
 
