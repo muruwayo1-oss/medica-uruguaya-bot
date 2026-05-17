@@ -1175,37 +1175,6 @@ if (i.isModalSubmit() && i.customId === 'modal_warn') {
 
             // ================= AGREGAR WARN =================
 
-            db.run(
-                `INSERT INTO sanctions
-                (user_id, type, reason, admin_id, date)
-                VALUES (?, ?, ?, ?, ?)`,
-                [
-                    target,
-                    'warn',
-                    reason,
-                    i.user.id,
-                    new Date().toLocaleString(
-    'es-UY',
-    {
-        timeZone:
-            'America/Montevideo'
-    }
-)
-                ],
-                async () => {
-
-        i.user.id,
-        new Date().toLocaleString(
-    'es-UY',
-    {
-        timeZone:
-            'America/Montevideo'
-    }
-)
-    
-);
-
-
 db.run(
     `INSERT INTO admin_history
     (user_id, action, admin_id, date)
