@@ -66,6 +66,33 @@ const client = new Client({
 
 const db = new sqlite3.Database('/data/medica.db');
 
+db.all(
+    `SELECT * FROM weekly_time`,
+    [],
+    (err, rows) => {
+
+        console.log(
+            'WEEKLY:',
+            rows
+        );
+    }
+);
+
+db.all(
+    `SELECT * FROM sessions
+    ORDER BY id DESC
+    LIMIT 10`,
+    [],
+    (err, rows) => {
+
+        console.log(
+            'SESSIONS:',
+            rows
+        );
+    }
+);
+
+
 db.run(`CREATE TABLE IF NOT EXISTS sanctions (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id TEXT,
