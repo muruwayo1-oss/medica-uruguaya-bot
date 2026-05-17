@@ -1202,7 +1202,7 @@ if (i.isModalSubmit() && i.customId === 'modal_warn') {
             'America/Montevideo'
     }
 )
-    ]
+    
 );
 
 
