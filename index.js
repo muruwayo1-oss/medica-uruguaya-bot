@@ -95,6 +95,8 @@ db.run(`CREATE TABLE IF NOT EXISTS active_sessions (
     channel_name TEXT
 )`);
 
+db.run(`DROP TABLE IF EXISTS rewards`);
+
 db.run(`
 CREATE TABLE IF NOT EXISTS rewards (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -103,6 +105,7 @@ CREATE TABLE IF NOT EXISTS rewards (
     description TEXT,
     required_hours INTEGER,
     created_at INTEGER,
+    ended_at INTEGER,
     active INTEGER DEFAULT 1
 )
 `);
@@ -1003,10 +1006,14 @@ if (i.isButton() && i.customId === 'ver_elegibles') {
                     await new Promise(
                         (resolve, reject) => {
 
-                            db.all(
-                                `SELECT * FROM sessions
-                                WHERE created_at >= ?`,
-                                [reward.created_at],
+                        db.all(
+    `SELECT * FROM sessions
+     WHERE created_at >= ?
+     AND created_at <= ?`,
+    [
+        reward.created_at,
+        reward.ended_at || Date.now()
+    ],
 
                                 (err, rows) => {
 
@@ -2640,10 +2647,16 @@ if (i.customId === 'select_delete_reward') {
                 });
             }
 
-            db.run(
-                `UPDATE rewards
-                SET active = 0
-                WHERE id=?`,
+          db.run(
+    `UPDATE rewards
+     SET active=0,
+     ended_at=?
+     WHERE id=?`,
+    [
+        Date.now(),
+        rewardId
+    ]
+);
 
                 [id],
 
