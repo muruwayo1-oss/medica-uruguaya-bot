@@ -249,80 +249,76 @@ if (!activeUsers.has(userId)) {
 
     const week = getWeek();
 
-    db.run(`
-        INSERT INTO weekly_time VALUES (?, ?, ?)
-        ON CONFLICT(user_id, week)
-        DO UPDATE SET total_time = total_time + ?
-    `,
-    [userId, week, diff, diff]);
+db.run(`
+    INSERT INTO weekly_time VALUES (?, ?, ?)
+    ON CONFLICT(user_id, week)
+    DO UPDATE SET total_time = total_time + ?
+`,
+[userId, week, diff, diff],
+() => {
 
-db.run(
-    `INSERT INTO session_logs
-    (user_id, start_time, end_time, duration)
-    VALUES (?, ?, ?, ?)`,
-    [
-        userId,
-        data.start,
-        end,
-        diff
-    ]
-);
+    db.run(
+        `INSERT INTO session_logs
+        (user_id, start_time, end_time, duration)
+        VALUES (?, ?, ?, ?)`,
+        [
+            userId,
+            data.start,
+            end,
+            diff
+        ]
+    );
 
-   db.get(
-    `SELECT SUM(total_time) as total_time
-    FROM weekly_time
-    WHERE user_id=?`,
-    [userId],
+    db.get(
+        `SELECT * FROM weekly_time
+        WHERE user_id=? AND week=?`,
+        [userId, week],
         async (err, row) => {
 
-            const total = row ? row.total_time : diff;
+            const total =
+                row ? row.total_time : diff;
 
-            const channel = await client.channels.fetch(LOG_CHANNEL_ID);
+            const channel =
+                await client.channels.fetch(
+                    LOG_CHANNEL_ID
+                );
 
-const embed = new EmbedBuilder()
-    .setColor(0x00bfff)
-    .setTitle('📊 Sesión Finalizada')
-    .addFields(
-        {
-            name: '👤 Usuario',
-            value: `<@${userId}>`,
-            inline: true
-        },
-        {
-            name: '🟢 Entrada',
-            value: formatHour(data.start),
-            inline: true
-        },
-        {
-            name: '🔴 Salida',
-            value: formatHour(end),
-            inline: true
-        },
-        {
-            name: '⏱️ Duración',
-            value: formatTime(diff)
-        },
-        {
-            name: '📊 Total Semanal',
-            value: formatTime(total)
-        }
-    )
-    .setFooter({
-        text:
-`Hora Uruguay: ${
-new Date().toLocaleString(
-'es-UY',
-{
-timeZone:
-'America/Montevideo'
-}
-)
-}`
-    });
+            const embed =
+                new EmbedBuilder()
+                    .setColor(0x00bfff)
+                    .setTitle('📊 Sesión Finalizada')
+                    .addFields(
+                        {
+                            name: '👤 Usuario',
+                            value: `<@${userId}>`,
+                            inline: true
+                        },
+                        {
+                            name: '🟢 Entrada',
+                            value: formatHour(data.start),
+                            inline: true
+                        },
+                        {
+                            name: '🔴 Salida',
+                            value: formatHour(end),
+                            inline: true
+                        },
+                        {
+                            name: '⏱️ Duración',
+                            value: formatTime(diff)
+                        },
+                        {
+                            name: '📊 Total Semanal',
+                            value: formatTime(total)
+                        }
+                    );
 
-            channel.send({
+            await channel.send({
                 embeds: [embed]
             });
+        }
+    );
+});
         }
     );
 }
