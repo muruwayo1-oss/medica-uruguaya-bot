@@ -3096,7 +3096,7 @@ const cirujano =
     guild.roles.cache
         .get(CIRUJANO_ROLE_ID)
         ?.members.map(
-            m => `• ${m.displayName}`
+            m => `• ${m} (${m.displayName})`
         )
         .join('\n') ||
     'Sin integrantes';
@@ -3105,7 +3105,7 @@ const cirujano =
             guild.roles.cache
                 .get(MEDICO_ROLE_ID)
                 ?.members.map(
-                    m => `• ${m.displayName}`
+                    m => `• ${m} (${m.displayName})`
                 )
                 .join('\n') ||
             'Sin integrantes';
@@ -3114,7 +3114,7 @@ const enfermero =
     guild.roles.cache
         .get(ENFERMERO_ROLE_ID)
         ?.members.map(
-            m => `• ${m.displayName}`
+            m => `• ${m} (${m.displayName})`
         )
         .join('\n') ||
     'Sin integrantes';
@@ -3123,7 +3123,7 @@ const enfermero =
             guild.roles.cache
                 .get(PARAMEDICO_ROLE_ID)
                 ?.members.map(
-                    m => `• ${m.displayName}`
+                    m => `• ${m} (${m.displayName})`
                 )
                 .join('\n') ||
             'Sin integrantes';
@@ -3132,7 +3132,7 @@ const enfermero =
             guild.roles.cache
                 .get(INTERNO_ROLE_ID)
                 ?.members.map(
-                    m => `• ${m.displayName}`
+                    m => `• ${m} (${m.displayName})`
                 )
                 .join('\n') ||
             'Sin integrantes';
