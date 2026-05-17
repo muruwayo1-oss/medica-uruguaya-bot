@@ -3090,6 +3090,8 @@ client.on('interactionCreate', async i => {
                 GUILD_ID
             ); 
 
+await guild.members.fetch();
+
 const cirujano =
     guild.roles.cache
         .get(CIRUJANO_ROLE_ID)
