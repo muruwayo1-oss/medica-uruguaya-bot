@@ -2054,7 +2054,55 @@ if (
 
     return i.showModal(modal);
 }
+if (
+    i.isModalSubmit() &&
+    i.customId === 'modal_despedir_postulante'
+) {
 
+    await i.deferReply({
+        flags: 64
+    });
+
+    const userId =
+        i.fields.getTextInputValue(
+            'despedido_id'
+        );
+
+    try {
+
+        const guild =
+            await client.guilds.fetch(
+                GUILD_ID
+            );
+
+        const member =
+            await guild.members.fetch(
+                userId
+            );
+
+        await member.roles.remove(
+            SERVICE_ROLE_ID
+        );
+
+        await member.roles.add(
+            DESPEDIDO_ROLE_ID
+        );
+
+        await i.editReply({
+            content:
+                '✅ Integrante despedido'
+        });
+
+    } catch (err) {
+
+        console.log(err);
+
+        await i.editReply({
+            content:
+                '❌ Algo ha fallado'
+        });
+    }
+}
  // ================= GUARDAR REWARD =================
 
 if (
