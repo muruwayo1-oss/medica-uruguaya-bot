@@ -34,7 +34,7 @@ const ADMIN_ROLE_ID = '1463173572209152182';
 const MOD_ROLE_ID = '1504658756875587604';
 
 const ROLE_ID = '1462189103381483697';
-const SERVICE_ROLE_ID = '1462189103381483697';
+const SERVICE_ROLE_ID = '1504659324503457942';
 const ADMIN_PANEL_CHANNEL_ID = '1504659808681332877';
 
 const REWARD_ROLE_ID = '1462189103381483697';
@@ -391,32 +391,11 @@ try {
 // quitar rol al salir del voice
 try {
 
-   const guild =
-    await client.guilds.fetch(
-        GUILD_ID
-    );
+    const guild = await client.guilds.fetch(GUILD_ID);
 
-const member =
-    await guild.members.fetch(
-        userId
-    );
+    const member = await guild.members.fetch(userId);
 
-const rolesToRemove =
-    member.roles.cache.filter(
-        role =>
-            role.id !== guild.id &&
-            !role.managed &&
-            role.position <
-            guild.members.me.roles.highest.position
-    );
-
-await member.roles.remove(
-    rolesToRemove
-);
-
-await member.roles.add(
-    DESPEDIDO_ROLE_ID
-);
+    await member.roles.remove(SERVICE_ROLE_ID);
 
 } catch (err) {
 
