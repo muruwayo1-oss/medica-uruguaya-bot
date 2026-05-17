@@ -488,6 +488,16 @@ const adminEmbed = new EmbedBuilder()
 By Mathi Uruwayo- DG
 
 ━━━━━━━━━━━━━━━━━━
+COMANDOS:
+/perfil (PERFIL DE CADA UNO)
+/historial + usuario (HISTORIAL GENERAL)
+/listado (LISTADO DEL PERSONAL ACTUAL Y RANGOS)
+
+🔐 Rango requerido:
+GESTION DE PERSONAL
+DIRECTOR
+
+━━━━━━━━━━━━━━━━━━
 SANCIONES
 ⚠️ Warn
 🚨 Strike
