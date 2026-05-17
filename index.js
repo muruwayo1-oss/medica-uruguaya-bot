@@ -2325,7 +2325,7 @@ if (i.isButton() && i.customId === 'ver_ganadores') {
             });
         }
     );
-}
+});
 
     // ================= ELIMINAR REWARD =================
 
