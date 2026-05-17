@@ -1002,29 +1002,28 @@ if (i.isButton() && i.customId === 'ver_elegibles') {
 
             for (const reward of rewards) {
 
-                const sessions =
-    await new Promise(
-        (resolve, reject) => {
+                const sessions = await new Promise(
+    (resolve, reject) => {
 
-            db.all(
-                `SELECT * FROM sessions
-                 WHERE created_at >= ?
-                 AND created_at <= ?`,
-                [
-                    reward.created_at,
-                    reward.ended_at || Date.now()
-                ],
-                (err, rows) => {
+        db.all(
+            `SELECT * FROM sessions
+             WHERE created_at >= ?
+             AND created_at <= ?`,
+            [
+                reward.created_at,
+                reward.ended_at || Date.now()
+            ],
+            (err, rows) => {
 
-                    if (err)
-                        reject(err);
-
-                    else
-                        resolve(rows);
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(rows);
                 }
-            );
-        }
-    );
+            }
+        );
+    }
+);
 
                 const totals = {};
 
