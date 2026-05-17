@@ -92,8 +92,11 @@ db.run(`
 CREATE TABLE IF NOT EXISTS rewards (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT,
+    reward TEXT,
+    description TEXT,
     required_hours INTEGER,
-    created_at INTEGER
+    created_at INTEGER,
+    active INTEGER DEFAULT 1
 )
 `);
 
@@ -1190,13 +1193,7 @@ if (i.isModalSubmit() && i.customId === 'modal_warn') {
 )
                 ],
                 async () => {
-db.run(
-    `INSERT INTO admin_history
-    (user_id, action, admin_id, date)
-    VALUES (?, ?, ?, ?)`,
-    [
-        target,
-        `Strike: ${reason}`,
+
         i.user.id,
         new Date().toLocaleString(
     'es-UY',
@@ -2932,19 +2929,19 @@ client.on('interactionCreate', async i => {
 
         }
 
-        const week = getWeek();
+      const week = getWeek();
 
-        db.get(
-            `SELECT * FROM weekly_time
-            WHERE user_id=? AND week=?`,
-            [i.user.id, week],
-            async (err, row) => {
+db.get(
+    `SELECT * FROM weekly_time
+    WHERE user_id=? AND week=?`,
+    [i.user.id, week],
+    async (err, row) => {
 
-                db.all(
-                    `SELECT * FROM sanctions
-                    WHERE user_id=?`,
-                    [i.user.id],
-                    async (err, sanctions) => {
+        db.all(
+            `SELECT * FROM sanctions
+            WHERE user_id=?`,
+            [i.user.id],
+            async (err, sanctions) => {
 
                         const warns =
                             sanctions.filter(
