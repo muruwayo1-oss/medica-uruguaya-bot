@@ -578,12 +578,6 @@ const adminRow = new ActionRowBuilder()
     .addComponents(
 
         new ButtonBuilder()
-            .setCustomId('aprobar_postulante')
-            .setEmoji('✅')
-            .setLabel('Aprobar')
-            .setStyle(ButtonStyle.Success),
-
-        new ButtonBuilder()
             .setCustomId('despedir_postulante')
             .setEmoji('❌')
             .setLabel('Despedir')
@@ -3096,7 +3090,7 @@ const cirujano =
     guild.roles.cache
         .get(CIRUJANO_ROLE_ID)
         ?.members.map(
-            m => `• ${m} (${m.displayName})`
+            m => `• ${m}`
         )
         .join('\n') ||
     'Sin integrantes';
@@ -3105,7 +3099,7 @@ const cirujano =
             guild.roles.cache
                 .get(MEDICO_ROLE_ID)
                 ?.members.map(
-                    m => `• ${m} (${m.displayName})`
+                    m => `• ${m}`
                 )
                 .join('\n') ||
             'Sin integrantes';
@@ -3114,7 +3108,7 @@ const enfermero =
     guild.roles.cache
         .get(ENFERMERO_ROLE_ID)
         ?.members.map(
-            m => `• ${m} (${m.displayName})`
+            m => `• ${m}`
         )
         .join('\n') ||
     'Sin integrantes';
@@ -3123,7 +3117,7 @@ const enfermero =
             guild.roles.cache
                 .get(PARAMEDICO_ROLE_ID)
                 ?.members.map(
-                    m => `• ${m} (${m.displayName})`
+                    m => `• ${m}`
                 )
                 .join('\n') ||
             'Sin integrantes';
@@ -3132,7 +3126,7 @@ const enfermero =
             guild.roles.cache
                 .get(INTERNO_ROLE_ID)
                 ?.members.map(
-                    m => `• ${m} (${m.displayName})`
+                    m => `• ${m}`
                 )
                 .join('\n') ||
             'Sin integrantes';
