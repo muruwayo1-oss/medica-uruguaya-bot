@@ -3201,7 +3201,7 @@ await enviarPanelPostulacion();
         });
     }
 });
-}
+
 // ================= LOGIN =================
 
 client.login(TOKEN);
